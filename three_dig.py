@@ -38,7 +38,6 @@ def generate_ith_children(node, i):
         str_a = str_b = ""
         for c in list_a: str_a += c
         for c in list_b: str_b += c
-
         return [Node(int(str_a), parent=node), Node(int(str_b), parent=node)]
 
     elif dif_add: 
@@ -48,6 +47,7 @@ def generate_ith_children(node, i):
             list_a = [str(node.value)[0], str(dig_add), str(node.value)[2]]
         else:
             list_a = [str(node.value)[0], str(node.value)[1], str(dig_add)]
+
         str_a = ""
         for c in list_a: str_a += c
         return [Node(int(str_a), parent=node)]
@@ -58,8 +58,7 @@ def generate_ith_children(node, i):
             list_b = [str(node.value)[0], str(dig_sub), str(node.value)[2]] 
         else:
             list_b = [str(node.value)[0], str(node.value)[1], str(dig_sub)]
-        
+
         str_b = "" 
         for c in list_b: str_b += c
-
         return [Node(int(str_b), parent=node)]
