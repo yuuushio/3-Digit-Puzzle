@@ -139,7 +139,7 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
         visited_nodes.append(tmp)
         current = tmp
 
-    if len(expanded) == 1000 return "No solution found, limit reached."
+    if len(expanded) == 1000: return "No solution found, limit reached."
 
     # If we're here, means goal has been found
     expanded.append(current)
@@ -149,3 +149,7 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
 
     return path, final_expanded
     
+def id(start, goal, forbidden=None, d):
+    # each time you expand a node, increase current depth by 1
+
+    # iterate till current_depth == d
