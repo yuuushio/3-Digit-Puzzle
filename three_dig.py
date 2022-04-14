@@ -152,5 +152,5 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
     
 # def id(start, goal, forbidden=None, d):
     # each time you expand a node, increase current depth by 1
-
+    # final list should be 1000 nodes max
     # iterate till current_depth == d
