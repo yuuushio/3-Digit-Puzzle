@@ -128,7 +128,7 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
             fringe += gen_children(current, forbidden) + fringe
 
         tmp = fringe.pop(0) # O(n)
-        # To avoid cycles, we implement our own __eq__ method
+        # To avoid cycles, we implement our own __eq__ method for node equality check
         while tmp in visited_nodes:
             # Keep discarding from fringe till u find a digit that
             # hasn't been visited
@@ -143,8 +143,9 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
 
     # If we're here, means goal has been found
     expanded.append(current)
-    
     final_expanded = []
     for n in expanded: final_expanded.append(n.value)
-    
+    path = get_path(current)
+
+    return path, final_expanded
     
