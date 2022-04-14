@@ -17,7 +17,7 @@ def change_single_digit(node_value, i):
     return dig_add, dig_subtract
 
 # generates 0-2 children of the ith index/digit
-def generate_ith_children(node, i):
+def gen_ith_children(node, i):
     dig_add, dig_sub = change_single_digit(node.value, i)
     
     # --?? should i use "or"...  --
@@ -62,3 +62,36 @@ def generate_ith_children(node, i):
         str_b = "" 
         for c in list_b: str_b += c
         return [Node(int(str_b), parent=node)]
+
+def gen_children(node, forbidden):
+    if node.parent is None:
+        # generate all children since no parent to depend on
+        for i in range(0, 3):
+            node_li += gen_ith_children(node, i)
+        
+        # children added as raw values - for easier comparisons of equality
+        #  using set/dict
+        for n in node_li:
+            node.children.append(n.value)
+        return node_li
+    else:
+        diff = math.fabs(node.parent.value - node.value)
+
+    if diff == 100:
+        node_li = gen_ith_children(node, 1) + gen_ith_children(node, 2)
+        for n in node_li:
+            node.children.append(n.value)
+        return node_li
+
+    elif diff == 10:
+        node_li = gen_ith_children(node, 0) + gen_ith_children(node, 2)
+        for n in node_li:
+            node.children.append(n.value)
+        return node_li
+
+    else:
+        # assume 3rd digit was changed (good assumption if valid input)
+        node_li = gen_ith_children(node, 0) + gen_ith_children(node, 1)
+        for n in node_li:
+            node.children.append(n.value)
+        return node_li
