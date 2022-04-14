@@ -18,7 +18,7 @@ def change_single_digit(node_value, i):
         dig_add = ith_digit + 1
     if ith_digit != 0:
         dig_subtract = ith_digit - 1
-    return dig_add, dig_subtract
+    return dig_subtract, dig_add
 
 # generates 0-2 children of the ith index/digit
 def gen_ith_children(node, i):
@@ -149,7 +149,7 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
 
     return path, final_expanded
     
-def id(start, goal, forbidden=None, d):
+# def id(start, goal, forbidden=None, d):
     # each time you expand a node, increase current depth by 1
 
     # iterate till current_depth == d
