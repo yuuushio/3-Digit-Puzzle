@@ -5,6 +5,10 @@ class Node:
         self.value = digit
         self.parent = parent
         self.children = []
+    # Custom equality check:
+    # - 2 nodes are same if they same 3 digits AND same child nodes
+    def __eq__(self, other):
+        return set(self.children) == set(other.children) and self.value == other.value
 
 # Helper method used to subtract/add at char i
 def change_single_digit(node_value, i):
@@ -95,3 +99,38 @@ def gen_children(node, forbidden):
         for n in node_li:
             node.children.append(n.value)
         return node_li
+
+# Can implement bfs and dfs in the same method, since the only
+# difference is the way the children are added to the fringe.
+def bfs_dfs(start, goal, forbidden=None, bfs=True):
+    visited_nodes = []
+    fringe = []
+    expanded = []
+    current = start
+    visited_nodes.append(current)
+
+    while curent.value != goal.value and len(expanded) < 1000:
+        expanded.append(current) # then we generate its children bc expanded
+        if bfs:
+            fringe += gen_children(current, forbidden)
+        else:
+            # else must be dfs; children are added at the front
+            fringe += gen_children(current, forbidden) + fringe
+
+        tmp = fringe.pop(0) # O(n)
+        # To avoid cycles, we implement our own __eq__ method
+        while tmp in visited_nodes:
+            # Keep discarding from fringe till u find a digit that
+            # hasn't been visited
+            tmp = fringe.pop(0)
+
+        # If we reach here means we found an unvisited node;
+        # can mark it as visited for next iteration
+        visited_nodes.append(tmp)
+        current = tmp
+
+    if len(expanded) == 1000 return "No solution found, limit reached."
+
+    # If we're here, means goal has been found
+    expanded.append(current)
+    
