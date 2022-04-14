@@ -44,7 +44,7 @@ def gen_ith_children(node, i):
         for c in list_b: str_b += c
         return [Node(int(str_a), parent=node), Node(int(str_b), parent=node)]
 
-    elif dif_add: 
+    elif dig_add: 
         if i == 0:
             list_a = [str(dig_add), str(node.value)[1], str(node.value)[2]]
         elif i == 1:
@@ -69,6 +69,7 @@ def gen_ith_children(node, i):
 
 def gen_children(node, forbidden):
     if node.parent is None:
+        node_li = []
         # generate all children since no parent to depend on
         for i in range(0, 3):
             node_li += gen_ith_children(node, i)
@@ -105,7 +106,7 @@ def get_path(node):
     path = []
     path.append(n.value)
     while n.parent is not None:
-        path.appent(n.parent.value)
+        path.append(n.parent.value)
         # Trace back through the parents for path
         n = n.parent
     return path[::-1] # Return the reverse of the list since we tracked back
@@ -119,7 +120,7 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
     current = start
     visited_nodes.append(current)
 
-    while curent.value != goal.value and len(expanded) < 1000:
+    while current.value != goal.value and len(expanded) < 1000:
         expanded.append(current) # then we generate its children bc expanded
         if bfs:
             fringe += gen_children(current, forbidden)

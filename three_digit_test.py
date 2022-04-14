@@ -11,12 +11,12 @@ def test_zero_th_nine():
     a = t.gen_ith_children(node, 0)
     # should only generate 1 child, since
     # you cant add to 9
-    assert len(a) = 1
+    assert len(a) == 1
 
 def test_zero_th_nine_value():
     node = t.Node(920)
     a = t.gen_ith_children(node, 0)
-    assert a.[0].value == 820
+    assert a[0].value == 820
 
 def test_gen_first_index():
     node = t.Node(320)
@@ -25,11 +25,18 @@ def test_gen_first_index():
 
 def test_gen_third_digit():
     node = t.Node(320)
-    a = gen_ith_children(node, 2)
+    a = t.gen_ith_children(node, 2)
     # also tests "cant subtract from 0" functionality
-    assert len(a) = 1
+    assert len(a) == 1
 
 def test_gen_third_digit_value():
     node = t.Node(320)
-    a = gen_ith_children(node, 2)
-    assert (a[0].value) = (321)
+    a = t.gen_ith_children(node, 2)
+    assert (a[0].value) == (321)
+
+def test_bfs_expanded():
+    start = t.Node(320)
+    goal = t.Node(110)
+    path, expanded = t.bfs_dfs(start, goal)
+    expected = [320,220,420,310,330,321,210,230,221,410,430,421,210,410,311,230,430,331,221,421,311,331,110]
+    assert expanded == expected
