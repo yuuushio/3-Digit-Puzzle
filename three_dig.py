@@ -100,6 +100,16 @@ def gen_children(node, forbidden):
             node.children.append(n.value)
         return node_li
 
+def get_path(node):
+    n = node
+    path = []
+    path.append(n.value)
+    while n.parent is not None:
+        path.appent(n.parent.value)
+        # Trace back through the parents for path
+        n = n.parent
+    return path[::-1] # Return the reverse of the list since we tracked back
+
 # Can implement bfs and dfs in the same method, since the only
 # difference is the way the children are added to the fringe.
 def bfs_dfs(start, goal, forbidden=None, bfs=True):
@@ -133,4 +143,8 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
 
     # If we're here, means goal has been found
     expanded.append(current)
+    
+    final_expanded = []
+    for n in expanded: final_expanded.append(n.value)
+    
     
