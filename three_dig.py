@@ -5,6 +5,7 @@ class Node:
         self.value = digit
         self.parent = parent
         self.children = []
+        self.depth = 0
     # Custom equality check:
     # - 2 nodes are same if they same 3 digits AND same child nodes
     def __eq__(self, other):
@@ -120,7 +121,7 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
     current = start
     visited_nodes.append(current)
 
-    while current.value != goal.value and len(expanded) < 1000:
+    while current.value != goal.value and len(expanded) <= 1000:
         expanded.append(current) # then we generate its children bc expanded
         if bfs:
             fringe += gen_children(current, forbidden)
@@ -150,6 +151,25 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
 
     return path, final_expanded
     
+def ids(start, goal, forbidden=None):
+    expanded = []
+    depth = 0
+    dls = ids_helper(start, goal, forbidden, depth, expanded)
+    goal_found = False
+    if dls[2]:
+        # if goal is found at depth 0 
+        return dls[1] 
+    else:
+        expanded += dls[1]
+        while goal_found == False
+            depth += 1
+            dls = ids_dfs(start, goal, forbidden, depth, expanded)
+            goal_found = dls[2]
+            expanded = dls[1]
+            
+
+
+
 # def id(start, goal, forbidden=None, d):
     # each time you expand a node, increase current depth by 1
     # final list should be 1000 nodes max
