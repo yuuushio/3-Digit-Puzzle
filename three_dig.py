@@ -182,13 +182,20 @@ def ids_helper(s, g, f, d, expanded):
 
     expanded.append(current)
     return None, expanded, True
- 
+
+def print_node_values(li):
+    ret_li = []
+    for n in li:
+        ret_li += n.value
+
+    return ret_li
+
 def ids(start, goal, forbidden=None):
     expanded = []
     depth = 0
     dls = ids_helper(start, goal, forbidden, depth, expanded)
     goal_found = False
-    print(dls[2], dls[1])
+    print(dls[2], print_node_values(dls[1]))
     if dls[2]:
         print("???")
         # if goal is found at depth 0 
