@@ -150,6 +150,31 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
     path = get_path(current)
 
     return path, final_expanded
+
+def ids_helper(s, g, f, d, expanded):
+    visited_nodes = []
+    fringe = []
+    current = s
+    visited_nodes.append(current)
+
+    while current.value != g.value and len(expanded) <= 1000:
+        expanded.append(current)
+        if current.depth < d:
+            fringe += gen_ith_children(current, f) + fringe
+
+        tmp = fringe.pop(0)
+
+        while tmp in visited_nodes:
+            tmp = fringe.pop(0)
+
+        visited_nodes.append(tmp)
+        current = tmp
+
+    if len(expanded) == 1000:
+        return None, expanded, False
+
+    expanded.append(current)
+    return None, expanded, True
     
 def ids(start, goal, forbidden=None):
     expanded = []
@@ -165,7 +190,13 @@ def ids(start, goal, forbidden=None):
             depth += 1
             dls = ids_dfs(start, goal, forbidden, depth, expanded)
             goal_found = dls[2]
+            # TODO: implement logic for when 1000 states are reached
+            # and the output from the method is the string
             expanded = dls[1]
+        final_expanded = []
+        for n in expanded:
+            final_expanded.append(n.value)
+        return final_expanded
             
 
 
