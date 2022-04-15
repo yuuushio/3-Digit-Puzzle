@@ -159,39 +159,45 @@ def ids_helper(s, g, f, d, expanded):
     fringe = []
     current = s
     visited_nodes.append(current)
+    print("depth:", d)
 
     while current.value != g.value and len(expanded) <= 1000:
         expanded.append(current)
         if current.depth < d:
-            fringe += gen_ith_children(current, f) + fringe
+            fringe += gen_children(current, f) + fringe
 
-        tmp = fringe.pop(0)
-
-        while tmp in visited_nodes:
+        if len(fringe) == 0:
+            return None, expanded, False
+        else:
             tmp = fringe.pop(0)
 
-        visited_nodes.append(tmp)
-        current = tmp
+            while tmp in visited_nodes and len(fringe) != 0:
+                tmp = fringe.pop(0)
+
+            visited_nodes.append(tmp)
+            current = tmp
 
     if len(expanded) == 1000:
         return None, expanded, False
 
     expanded.append(current)
     return None, expanded, True
-    
+ 
 def ids(start, goal, forbidden=None):
     expanded = []
     depth = 0
     dls = ids_helper(start, goal, forbidden, depth, expanded)
     goal_found = False
+    print(dls[2], dls[1])
     if dls[2]:
+        print("???")
         # if goal is found at depth 0 
         return dls[1] 
     else:
         expanded += dls[1]
-        while goal_found == False
+        while goal_found == False and len(expanded) <= 1000:
             depth += 1
-            dls = ids_dfs(start, goal, forbidden, depth, expanded)
+            dls = ids_helper(start, goal, forbidden, depth, expanded)
             goal_found = dls[2]
             # TODO: implement logic for when 1000 states are reached
             # and the output from the method is the string
@@ -202,7 +208,7 @@ def ids(start, goal, forbidden=None):
         return final_expanded
             
 
-
+print(ids(Node(310), Node(110)))
 
 # def id(start, goal, forbidden=None, d):
     # each time you expand a node, increase current depth by 1
