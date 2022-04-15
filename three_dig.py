@@ -5,7 +5,10 @@ class Node:
         self.value = digit
         self.parent = parent
         self.children = []
-        self.depth = 0
+        if parent is None:
+            self.depth = 0
+        else:
+            self.depth = self.parent.depth + 1
     # Custom equality check:
     # - 2 nodes are same if they same 3 digits AND same child nodes
     def __eq__(self, other):
