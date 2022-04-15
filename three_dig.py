@@ -28,7 +28,7 @@ def change_single_digit(node_value, i):
 def gen_ith_children(node, i):
     dig_add, dig_sub = change_single_digit(node.value, i)
     
-    # --?? should i use "or"...  --
+    # error check 
     if dig_add is None and dig_sub is None:
         return []
 
@@ -130,7 +130,7 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
             fringe += gen_children(current, forbidden)
         else:
             # else must be dfs; children are added at the front
-            fringe += gen_children(current, forbidden) + fringe
+            fringe = gen_children(current, forbidden) + fringe
 
         tmp = fringe.pop(0) # O(n)
         # To avoid cycles, we implement our own __eq__ method for node equality check
@@ -138,7 +138,7 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
             # Keep discarding from fringe till u find a digit that
             # hasn't been visited
             tmp = fringe.pop(0)
-
+        print(len(expanded))
         # If we reach here means we found an unvisited node;
         # can mark it as visited for next iteration
         visited_nodes.append(tmp)
@@ -159,24 +159,25 @@ def ids_helper(s, g, f, d, expanded):
     fringe = []
     current = s
     visited_nodes.append(current)
-    print("depth:", d)
+    children_generated = []
 
     while current.value != g.value and len(expanded) <= 1000:
         expanded.append(current)
-        if current.depth < d:
-            fringe += gen_children(current, f) + fringe
-
+        if current.depth < d and current not in children_generated:
+            fringe = gen_children(current, f) + fringe
+            children_generated.append(current)
         if len(fringe) == 0:
             return None, expanded, False
         else:
             tmp = fringe.pop(0)
-
             while tmp in visited_nodes and len(fringe) != 0:
                 tmp = fringe.pop(0)
+                if len(fringe) == 0:
+                    return None, expanded, False
 
             visited_nodes.append(tmp)
-            current = tmp
-
+            if tmp is not None:
+                current = tmp
     if len(expanded) == 1000:
         return None, expanded, False
 
@@ -197,7 +198,6 @@ def ids(start, goal, forbidden=None):
     goal_found = False
     print(dls[2], print_node_values(dls[1]))
     if dls[2]:
-        print("???")
         # if goal is found at depth 0 
         return dls[1] 
     else:
@@ -208,15 +208,16 @@ def ids(start, goal, forbidden=None):
             goal_found = dls[2]
             # TODO: implement logic for when 1000 states are reached
             # and the output from the method is the string
-            print(print_node_values(dls[1]))
             expanded = dls[1]
         final_expanded = []
         for n in expanded:
             final_expanded.append(n.value)
         return final_expanded
             
+# infinite loop when start = 310
+print(ids(Node(310), Node(110)))
 
-print(ids(Node(320), Node(110)))
+#print(bfs_dfs(Node(310), Node(110), bfs=False))
 
 # def id(start, goal, forbidden=None, d):
     # each time you expand a node, increase current depth by 1
