@@ -186,7 +186,7 @@ def ids_helper(s, g, f, d, expanded):
 def print_node_values(li):
     ret_li = []
     for n in li:
-        ret_li += n.value
+        ret_li.append(n.value)
 
     return ret_li
 
@@ -201,13 +201,14 @@ def ids(start, goal, forbidden=None):
         # if goal is found at depth 0 
         return dls[1] 
     else:
-        expanded += dls[1]
+        #expanded += dls[1]
         while goal_found == False and len(expanded) <= 1000:
             depth += 1
             dls = ids_helper(start, goal, forbidden, depth, expanded)
             goal_found = dls[2]
             # TODO: implement logic for when 1000 states are reached
             # and the output from the method is the string
+            print(print_node_values(dls[1]))
             expanded = dls[1]
         final_expanded = []
         for n in expanded:
@@ -215,7 +216,7 @@ def ids(start, goal, forbidden=None):
         return final_expanded
             
 
-print(ids(Node(310), Node(110)))
+print(ids(Node(320), Node(110)))
 
 # def id(start, goal, forbidden=None, d):
     # each time you expand a node, increase current depth by 1
