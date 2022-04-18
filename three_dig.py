@@ -14,6 +14,15 @@ class Node:
     def __eq__(self, other):
         return set(self.children) == set(other.children) and self.value == other.value
 
+def mh_heuristic(a, b):
+    str_a = str(a)
+    str_b = str(b)
+    res = 0
+    for x,y in zip(str_a, str_b):
+        res += math.fabs(int(x)+int(y))
+
+    return res
+
 # Helper method used to subtract/add at char i
 def change_single_digit(node_value, i):
     dig_add = dig_subtract = None
