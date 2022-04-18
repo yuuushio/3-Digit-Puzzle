@@ -227,15 +227,34 @@ def ids(start, goal, forbidden=None):
             final_expanded.append(n.value)
         return final_expanded
 
-def get_last_added(pq):
-    i = 0
-    result = pq[0]
 def greedy(s, g, f):
     expanded = []
     visited = []
-    fringe = PriorityQueue()
+    fringe = PriorityQueue() # Since it's greedy expansaion
     current = s
     visited.append(current)
+    i = 0
     while current.value != goal and len(expanded) <= 1000:
         expanded.append(current)
-        fringe
+        # Add children to pq by their heuristic
+        for c in gen_children(current, f):
+            # Negated priority ensures that the last added node
+            # has higher priority if their heuristic is the same
+            fringe.put((c.heuristic, -1*i, c))
+            i+=1
+        tmp = fringe.get()[2] # get returns a tupple; 2nd index gives the node 
+        while tmp in visited:
+            tmp = fringe.get()[2]
+
+        visited.append(tmp)
+        current = tmp
+        
+    if len(expanded) == 1000: return "No solution found, limit reached."
+
+    # If we're here, means goal has been found
+    expanded.append(current)
+    final_expanded = []
+    for n in expanded: final_expanded.append(n.value)
+    path = get_path(current)
+
+    return path, final_expanded
