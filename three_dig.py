@@ -165,12 +165,15 @@ def ids_helper(s, g, f, d, expanded):
 
     while current.value != g.value and len(expanded) <= 1000:
         expanded.append(current)
+        # Dont generate children of depth greater than current d
         if current.depth < d and current not in children_generated:
             fringe = gen_children(current, f) + fringe
             children_generated.append(current)
+        # To avoid popping from empty fringe list
         if len(fringe) == 0:
             return expanded, False
         else:
+            # Keep popping till you find an un-visited noed
             tmp = fringe.pop(0)
             while tmp in visited_nodes and len(fringe) != 0:
                 tmp = fringe.pop(0)
@@ -195,6 +198,7 @@ def ids(start, goal, forbidden=None):
         # if goal is found at depth 0 
         return [dls[0].value]
     else:
+        # Iteratively call dfs till goal found/limit reached
         while goal_found == False and len(expanded) <= 1000:
             # Increase depth after each dfs call
             depth += 1
