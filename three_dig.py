@@ -1,4 +1,5 @@
 import math
+from queue import PriorityQueue
 
 class Node:
     def __init__(self, digit, parent=None):
@@ -222,3 +223,12 @@ def ids(start, goal, forbidden=None):
             final_expanded.append(n.value)
         return final_expanded
             
+def greedy(s, g, f):
+    expanded = []
+    visited = []
+    fringe = PriorityQueue()
+    current = s
+    visited.append(current)
+    while current.value != goal and len(expanded) <= 1000:
+        expanded.append(current)
+        fringe
