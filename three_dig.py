@@ -6,6 +6,10 @@ class Node:
         self.value = digit
         self.parent = parent
         self.children = []
+        if self.parent is None:
+            self.heuristic = 0
+        else:
+            self.heuristic = mh_heuristic(self.value, self.parent.value)
         if parent is None:
             self.depth = 0
         else:
@@ -20,7 +24,7 @@ def mh_heuristic(a, b):
     str_b = str(b)
     res = 0
     for x,y in zip(str_a, str_b):
-        res += math.fabs(int(x)+int(y))
+        res += math.fabs(int(x)-int(y))
 
     return res
 
@@ -222,7 +226,10 @@ def ids(start, goal, forbidden=None):
         for n in expanded:
             final_expanded.append(n.value)
         return final_expanded
-            
+
+def get_last_added(pq):
+    i = 0
+    result = pq[0]
 def greedy(s, g, f):
     expanded = []
     visited = []
