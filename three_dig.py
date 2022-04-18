@@ -233,12 +233,11 @@ def greedy(s, g, f=None):
     while current.value != g.value and len(expanded) <= 1000:
         expanded.append(current)
         # Add children to pq by their heuristic
-        children = gen_children(current, f)
-        for c in children:
-            print(c.heuristic, c.value, c.parent.value)
+        for c in gen_children(current, f):
+            h = mh_heuristic(c.value, g.value)
             # Negated priority ensures that the last added node
             # has higher priority if their heuristic is the same 
-            fringe.put((c.heuristic, i, c))
+            fringe.put((h, i, c))
             #print(fringe.queue[0])
             i-=1
         tmp = fringe.get()[2] # get returns a tupple; 2nd index gives the node 
