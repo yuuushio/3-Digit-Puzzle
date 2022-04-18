@@ -191,7 +191,7 @@ def ids(start, goal, forbidden=None):
     goal_found = False
     if dls[2]:
         # if goal is found at depth 0 
-        return dls[1] 
+        return [dls[1].value]
     else:
         #expanded += dls[1]
         while goal_found == False and len(expanded) <= 1000:
