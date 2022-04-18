@@ -6,10 +6,6 @@ class Node:
         self.value = digit
         self.parent = parent
         self.children = []
-        if self.parent is None:
-            self.heuristic = 0
-        else:
-            self.heuristic = mh_heuristic(self.value, self.parent.value)
         if parent is None:
             self.depth = 0
         else:
@@ -227,21 +223,24 @@ def ids(start, goal, forbidden=None):
             final_expanded.append(n.value)
         return final_expanded
 
-def greedy(s, g, f):
+def greedy(s, g, f=None):
     expanded = []
     visited = []
     fringe = PriorityQueue() # Since it's greedy expansaion
     current = s
     visited.append(current)
     i = 0
-    while current.value != goal and len(expanded) <= 1000:
+    while current.value != g.value and len(expanded) <= 1000:
         expanded.append(current)
         # Add children to pq by their heuristic
-        for c in gen_children(current, f):
+        children = gen_children(current, f)
+        for c in children:
+            print(c.heuristic, c.value, c.parent.value)
             # Negated priority ensures that the last added node
-            # has higher priority if their heuristic is the same
-            fringe.put((c.heuristic, -1*i, c))
-            i+=1
+            # has higher priority if their heuristic is the same 
+            fringe.put((c.heuristic, i, c))
+            #print(fringe.queue[0])
+            i-=1
         tmp = fringe.get()[2] # get returns a tupple; 2nd index gives the node 
         while tmp in visited:
             tmp = fringe.get()[2]
@@ -258,3 +257,7 @@ def greedy(s, g, f):
     path = get_path(current)
 
     return path, final_expanded
+
+a=Node(320)
+b=Node(110)
+greedy(a,b)
