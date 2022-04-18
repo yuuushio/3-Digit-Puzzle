@@ -154,6 +154,8 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
 
     return path, final_expanded
 
+# DFS that only gets expanded up to a certain depth
+# Return: [] -> expanded nodes, true if goal found, else false
 def ids_helper(s, g, f, d, expanded):
     visited_nodes = []
     fringe = []
@@ -167,51 +169,43 @@ def ids_helper(s, g, f, d, expanded):
             fringe = gen_children(current, f) + fringe
             children_generated.append(current)
         if len(fringe) == 0:
-            return None, expanded, False
+            return expanded, False
         else:
             tmp = fringe.pop(0)
             while tmp in visited_nodes and len(fringe) != 0:
                 tmp = fringe.pop(0)
                 if len(fringe) == 0:
-                    return None, expanded, False
+                    return expanded, False
 
             visited_nodes.append(tmp)
             if tmp is not None:
                 current = tmp
     if len(expanded) == 1000:
-        return None, expanded, False
+        return expanded, False
 
     expanded.append(current)
-    return None, expanded, True
+    return expanded, True
 
 def ids(start, goal, forbidden=None):
     expanded = []
     depth = 0
     dls = ids_helper(start, goal, forbidden, depth, expanded)
     goal_found = False
-    if dls[2]:
+    if dls[1]:
         # if goal is found at depth 0 
-        return [dls[1].value]
+        return [dls[0].value]
     else:
-        #expanded += dls[1]
         while goal_found == False and len(expanded) <= 1000:
+            # Increase depth after each dfs call
             depth += 1
             dls = ids_helper(start, goal, forbidden, depth, expanded)
-            goal_found = dls[2]
-            # TODO: implement logic for when 1000 states are reached
-            # and the output from the method is the string
-            expanded = dls[1]
+            goal_found = dls[1]
+            expanded = dls[0]
+        if dls[1] == False and len(expanded) >= 1000:
+            return "No solution found. Limit Reached"
         final_expanded = []
+        # Since expanded is a list of node - get their values
         for n in expanded:
             final_expanded.append(n.value)
         return final_expanded
             
-# infinite loop when start = 310
-print(ids(Node(310), Node(110)))
-
-#print(bfs_dfs(Node(310), Node(110), bfs=False))
-
-# def id(start, goal, forbidden=None, d):
-    # each time you expand a node, increase current depth by 1
-    # final list should be 1000 nodes max
-    # iterate till current_depth == d
