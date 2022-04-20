@@ -223,10 +223,16 @@ def ids(start, goal, forbidden=None):
             final_expanded.append(n.value)
         return final_expanded
 
+def print_tuples(l):
+    for t in l:
+        print(t[0], t[1], t[2].vavlue)
+    print("-----")
+
 def greedy(s, g, f=None):
     expanded = []
     visited = []
-    fringe = PriorityQueue() # Since it's greedy expansaion
+    # Pq used to get the node with smallest h
+    fringe = PriorityQueue() 
     current = s
     visited.append(current)
     i = 0
@@ -235,11 +241,13 @@ def greedy(s, g, f=None):
         # Add children to pq by their heuristic
         for c in gen_children(current, f):
             h = mh_heuristic(c.value, g.value)
+            #print(h,c.value,g.value)
             # Negated priority ensures that the last added node
             # has higher priority if their heuristic is the same 
             fringe.put((h, i, c))
-            #print(fringe.queue[0])
             i-=1
+
+        print_tuples(fringe.queue)
         tmp = fringe.get()[2] # get returns a tupple; 2nd index gives the node 
         while tmp in visited:
             tmp = fringe.get()[2]
@@ -259,4 +267,4 @@ def greedy(s, g, f=None):
 
 a=Node(320)
 b=Node(110)
-greedy(a,b)
+print(greedy(a,b))
