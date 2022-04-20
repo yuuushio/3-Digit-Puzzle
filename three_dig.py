@@ -37,12 +37,11 @@ def change_single_digit(node_value, i):
 # generates 0-2 children of the ith index/digit
 def gen_ith_children(node, i):
     dig_add, dig_sub = change_single_digit(node.value, i)
-    
+    print(dig_add, dig_sub) 
     # error check 
     if dig_add is None and dig_sub is None:
         return []
-
-    if dig_add and dig_sub:
+    if dig_add is not None and dig_sub is not None:
         if i == 0:
             list_a = [str(dig_add), str(node.value)[1], str(node.value)[2]]
             list_b = [str(dig_sub), str(node.value)[1], str(node.value)[2]]
@@ -100,6 +99,7 @@ def gen_children(node, forbidden):
         node_li = gen_ith_children(node, 1) + gen_ith_children(node, 2)
         for n in node_li:
             node.children.append(n.value)
+        for n in node_li: print(n.value)
         return node_li
 
     elif diff == 10:
