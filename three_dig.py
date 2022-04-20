@@ -95,7 +95,7 @@ def gen_children(node, forbidden):
         return node_li
     else:
         diff = math.fabs(node.parent.value - node.value)
-
+    print("gen children for", node.value, "diff:",diff)
     if diff == 100:
         node_li = gen_ith_children(node, 1) + gen_ith_children(node, 2)
         for n in node_li:
@@ -225,7 +225,7 @@ def ids(start, goal, forbidden=None):
 
 def print_tuples(l):
     for t in l:
-        print(t[0], t[1], t[2].vavlue)
+        print(t[0], t[1], t[2].value)
     print("-----")
 
 def greedy(s, g, f=None):
@@ -237,6 +237,8 @@ def greedy(s, g, f=None):
     visited.append(current)
     i = 0
     while current.value != g.value and len(expanded) <= 1000:
+        if current.parent:
+            print("CURRENT:", current.value, "PARENT:", current.parent.value)
         expanded.append(current)
         # Add children to pq by their heuristic
         for c in gen_children(current, f):
@@ -247,7 +249,7 @@ def greedy(s, g, f=None):
             fringe.put((h, i, c))
             i-=1
 
-        print_tuples(fringe.queue)
+        #print_tuples(fringe.queue)
         tmp = fringe.get()[2] # get returns a tupple; 2nd index gives the node 
         while tmp in visited:
             tmp = fringe.get()[2]
