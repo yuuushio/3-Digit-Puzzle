@@ -37,7 +37,6 @@ def change_single_digit(node_value, i):
 # generates 0-2 children of the ith index/digit
 def gen_ith_children(node, i):
     dig_add, dig_sub = change_single_digit(node.value, i)
-    print(dig_add, dig_sub) 
     # error check 
     if dig_add is None and dig_sub is None:
         return []
@@ -94,12 +93,10 @@ def gen_children(node, forbidden):
         return node_li
     else:
         diff = math.fabs(node.parent.value - node.value)
-    print("gen children for", node.value, "diff:",diff)
     if diff == 100:
         node_li = gen_ith_children(node, 1) + gen_ith_children(node, 2)
         for n in node_li:
             node.children.append(n.value)
-        for n in node_li: print(n.value)
         return node_li
 
     elif diff == 10:
@@ -148,7 +145,6 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
             # Keep discarding from fringe till u find a digit that
             # hasn't been visited
             tmp = fringe.pop(0)
-        print(len(expanded))
         # If we reach here means we found an unvisited node;
         # can mark it as visited for next iteration
         visited_nodes.append(tmp)
@@ -223,11 +219,6 @@ def ids(start, goal, forbidden=None):
             final_expanded.append(n.value)
         return final_expanded
 
-def print_tuples(l):
-    for t in l:
-        print(t[0], t[1], t[2].value)
-    print("-----")
-
 def greedy(s, g, f=None):
     expanded = []
     visited = []
@@ -237,19 +228,14 @@ def greedy(s, g, f=None):
     visited.append(current)
     i = 0
     while current.value != g.value and len(expanded) <= 1000:
-        if current.parent:
-            print("CURRENT:", current.value, "PARENT:", current.parent.value)
         expanded.append(current)
         # Add children to pq by their heuristic
         for c in gen_children(current, f):
             h = mh_heuristic(c.value, g.value)
-            #print(h,c.value,g.value)
             # Negated priority ensures that the last added node
             # has higher priority if their heuristic is the same 
             fringe.put((h, i, c))
             i-=1
-
-        #print_tuples(fringe.queue)
         tmp = fringe.get()[2] # get returns a tupple; 2nd index gives the node 
         while tmp in visited:
             tmp = fringe.get()[2]
@@ -267,6 +253,3 @@ def greedy(s, g, f=None):
 
     return path, final_expanded
 
-a=Node(320)
-b=Node(110)
-print(greedy(a,b))
