@@ -226,15 +226,15 @@ def greedy(s, g, f=None):
     fringe = PriorityQueue() 
     current = s
     visited.append(current)
-    i = 0
+    i = 0 # To differentiate nodes when their h is same
     while current.value != g.value and len(expanded) <= 1000:
         expanded.append(current)
         # Add children to pq by their heuristic
         for c in gen_children(current, f):
             h = mh_heuristic(c.value, g.value)
-            # Negated priority ensures that the last added node
-            # has higher priority if their heuristic is the same 
             fringe.put((h, i, c))
+            # Negated i ensures that the last added node
+            # has higher priority if their heuristic is the same 
             i-=1
         tmp = fringe.get()[2] # get returns a tupple; 2nd index gives the node 
         while tmp in visited:
