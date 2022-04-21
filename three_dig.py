@@ -253,3 +253,38 @@ def greedy(s, g, f=None):
 
     return path, final_expanded
 
+# Returns f; f = g + h
+# where g = cost so far to reach node
+# h = heuristic of the node
+def astar_cost_func(node, g):
+    return node.depth + mh_heuristic(node.value, g.value)
+
+def a_star(s,g,f=None):
+    expanded = []
+    visited = []
+    fringe = PriorityQueue()
+    current = s
+    visited.append(current)
+    i = 0
+    while current.value != g.value and len(expanded) <= 1000:
+        expanded.append(current)
+        print(current.value)
+        for c in gen_children(current, f):
+            h = astar_cost_func(c, g)
+            fringe.put((h, i, c))
+            i -= 1
+        tmp = fringe.get()[2]
+        while tmp in visited:
+            tmp = fringe.get()[2]
+        visited.append(tmp)
+        current = tmp
+
+    if len(expanded) == 1000: return "No solution found."
+
+    expanded.append(current)
+    final_expanded = []
+    for n in expanded: final_expanded.append(n.value)
+    path = get_path(current)
+
+    return path, final_expanded
+print(a_star(Node(320), Node(110)))
