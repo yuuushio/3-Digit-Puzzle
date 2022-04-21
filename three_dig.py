@@ -19,7 +19,6 @@ def mh_heuristic(a, b):
     res = 0
     for x,y in zip(str(a), str(b)):
         res += math.fabs(int(x)-int(y))
-
     return res
 
 # Helper method used to subtract/add at char i
