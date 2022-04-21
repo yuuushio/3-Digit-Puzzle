@@ -268,7 +268,6 @@ def a_star(s,g,f=None):
     i = 0
     while current.value != g.value and len(expanded) <= 1000:
         expanded.append(current)
-        print(current.value)
         for c in gen_children(current, f):
             h = astar_cost_func(c, g)
             fringe.put((h, i, c))
