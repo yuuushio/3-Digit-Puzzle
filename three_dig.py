@@ -96,21 +96,14 @@ def gen_children(node, forbidden):
         return renewed_list 
     else:
         diff = math.fabs(node.parent.value - node.value)
-    if diff == 100:
-        node_li = gen_ith_children(node, 1) + gen_ith_children(node, 2)
-        renewed_li = renewed_list(node_li, forbidden)
-        node_children_list_helper(node, renewed_list)
-        return renewed_list 
-
-    elif diff == 10:
-        node_li = gen_ith_children(node, 0) + gen_ith_children(node, 2)
-        renewed_li = renewed_list(node_li, forbidden)
-        node_children_list_helper(node, renewed_list)
-        return renewed_list 
-
-    else:
-        # assume 3rd digit was changed (good assumption if valid input)
-        node_li = gen_ith_children(node, 0) + gen_ith_children(node, 1)
+        if diff == 100:
+            node_li = gen_ith_children(node, 1) + gen_ith_children(node, 2)
+        elif diff == 10:
+            node_li = gen_ith_children(node, 0) + gen_ith_children(node, 2)
+        else:
+            # assume 3rd digit was changed (good assumption if valid input)
+            node_li = gen_ith_children(node, 0) + gen_ith_children(node, 1)
+    
         renewed_li = renewed_list(node_li, forbidden)
         node_children_list_helper(node, renewed_list)
         return renewed_list 
