@@ -119,6 +119,7 @@ def get_path(node):
 def generate_return_val(expanded):
     final_expanded = []
     for n in expanded: final_expanded.append(n.value)
+    # [-1] bc we appended the goal node in the end
     path = get_path(expanded[-1])
     return path, final_expanded
 
