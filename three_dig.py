@@ -86,14 +86,11 @@ def node_children_list_helper(node, renewed_li):
     for n in renewed_li: node.children.append(n.value)
 
 def gen_children(node, forbidden):
+    node_li = []
     if node.parent is None:
-        node_li = []
         # generate all children since no parent to depend on
         for i in range(0, 3):
             node_li += gen_ith_children(node, i) 
-        renewed_li = renewed_list(node_li, forbidden)
-        node_children_list_helper(node, renewed_list)
-        return renewed_list 
     else:
         diff = math.fabs(node.parent.value - node.value)
         if diff == 100:
@@ -104,9 +101,9 @@ def gen_children(node, forbidden):
             # assume 3rd digit was changed (good assumption if valid input)
             node_li = gen_ith_children(node, 0) + gen_ith_children(node, 1)
     
-        renewed_li = renewed_list(node_li, forbidden)
-        node_children_list_helper(node, renewed_list)
-        return renewed_list 
+    renewed_li = renew_list(node_li, forbidden)
+    node_children_list_helper(node, renewed_li)
+    return renewed_li 
 
 def get_path(node):
     n = node
