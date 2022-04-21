@@ -247,7 +247,7 @@ def astar_cost_func(node, g):
     # we can use the node's depth as cost to get to that node
     return node.depth + mh_heuristic(node.value, g.value)
 
-def a_star(s,g,f=None):
+def a_star(s, g, f=None):
     expanded = []
     visited = []
     # Pq to get node with lowest cost function in lg(n) time
