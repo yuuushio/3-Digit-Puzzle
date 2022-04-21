@@ -257,33 +257,40 @@ def greedy(s, g, f=None):
 # where g = cost so far to reach node
 # h = heuristic of the node
 def astar_cost_func(node, g):
+    # Since the edge weights are virtually 1,
+    # we can use the node's depth as cost to get to that node
     return node.depth + mh_heuristic(node.value, g.value)
 
 def a_star(s,g,f=None):
     expanded = []
     visited = []
+    # Pq to get node with lowest cost function in lg(n) time
     fringe = PriorityQueue()
     current = s
     visited.append(current)
-    i = 0
+    i = 0 # To differentiate when nodes have same h
     while current.value != g.value and len(expanded) <= 1000:
         expanded.append(current)
+        # Expand node and add its children to fringe
         for c in gen_children(current, f):
             h = astar_cost_func(c, g)
             fringe.put((h, i, c))
             i -= 1
-        tmp = fringe.get()[2]
-        while tmp in visited:
+        # Get next node to expand from fringe
+        if len(fringe) != 0:
+            tmp = fringe.get()[2]
+        while tmp in visited and len(fringe) != 0:
+            # Keep popping from fringe till an un-visited node is found
             tmp = fringe.get()[2]
         visited.append(tmp)
         current = tmp
 
     if len(expanded) == 1000: return "No solution found."
 
+    # Goal has been found: get path and the list of expanded nodes
     expanded.append(current)
     final_expanded = []
     for n in expanded: final_expanded.append(n.value)
     path = get_path(current)
 
     return path, final_expanded
-print(a_star(Node(320), Node(110)))
