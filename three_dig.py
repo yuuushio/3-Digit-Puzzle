@@ -209,36 +209,6 @@ def ids(start, goal, forbidden=None):
 
         return generate_return_val(expanded)
 
-
-def greedy(s, g, f=None):
-    expanded = []
-    visited = []
-    # Pq used to get the node with smallest h
-    fringe = PriorityQueue() 
-    current = s
-    visited.append(current)
-    i = 0 # To differentiate nodes when their h is same
-    while current.value != g.value and len(expanded) <= 1000:
-        expanded.append(current)
-        # Add children to pq by their heuristic
-        for c in gen_children(current, f):
-            h = mh_heuristic(c.value, g.value)
-            fringe.put((h, i, c))
-            # Negated i ensures that the last added node
-            # has higher priority if their heuristic is the same 
-            i-=1
-        tmp = fringe.get()[2] # get returns a tupple; 2nd index gives the node 
-        while tmp in visited:
-            tmp = fringe.get()[2]
-
-        visited.append(tmp)
-        current = tmp
-        
-    if len(expanded) == 1000: return "No solution found, limit reached."
-    # If we're here, means goal has been found
-    expanded.append(current)
-    return generate_return_val(expanded)
-
 # Returns f; f = g + h
 # where g = cost so far to reach node
 # h = heuristic of the node
@@ -247,7 +217,10 @@ def astar_cost_func(node, g):
     # we can use the node's depth as cost to get to that node
     return node.depth + mh_heuristic(node.value, g.value)
 
-def a_star(s, g, f=None):
+# Greedy & a_star combined into 1 since the only difference in this case
+# is the heuristic/f(n) calculation:
+#  if a_star = False, evaluate Greedy, i.e., evaluate greedy by default
+def heuristic_based(s, g, f=None, a_star=False):
     expanded = []
     visited = []
     # Pq to get node with lowest cost function in lg(n) time
@@ -259,7 +232,7 @@ def a_star(s, g, f=None):
         expanded.append(current)
         # Expand node and add its children to fringe
         for c in gen_children(current, f):
-            h = astar_cost_func(c, g)
+            h = astar_cost_func(c, g) if a_star else mh_heuristic(c.value, g.value)
             fringe.put((h, i, c))
             i -= 1
         # Get next node to expand from fringe
@@ -276,4 +249,4 @@ def a_star(s, g, f=None):
     expanded.append(current)
     return generate_return_val(expanded)
 
-print(a_star(Node(320), Node(110)))
+print(heuristic_based(Node(320), Node(110)))
