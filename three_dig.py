@@ -1,4 +1,5 @@
 import math
+import sys
 from queue import PriorityQueue
 
 class Node:
@@ -117,8 +118,7 @@ def get_path(node):
 
 # Generates the output path and expanded list
 def generate_return_val(expanded):
-    final_expanded = []
-    for n in expanded: final_expanded.append(n.value)
+    final_expanded = [n.value for n in expanded]
     # [-1] bc we appended the goal node in the end
     path = get_path(expanded[-1])
     return path, final_expanded
@@ -262,5 +262,31 @@ def print_output(path, expanded):
             print(",", end="")
     print("")
 
+def main():
+    algo = sys.arg[2]
+    file_name = sys.arg[3]
+    with open(file_name, r) as f:
+        contents = f.readlines()
+    s = int(contents[0])
+    g = int(contents[1]) 
+    if len(contents) > 2:
+        forbidden_list_str = contents[2].split(",")
+        f_int = [int(dig) for dig in forbidden_list_str]
+    if algo = "B":
+        f = f_int if len(contents) > 2 else None
+        print_output(bfs_dfs(s,g,f))
+    if algo = "D":
+        f = f_int if len(contents) > 2 else None
+        print_output(bfs_dfs(s,g,f,bfs=False))
+    if algo = "I":
+        f = f_int if len(contents) > 2 else None
+        print_output(ids(s,g,f))
+    if algo = "G":
+        f = f_int if len(contents) > 2 else None
+        print_output(heuristic(s,g,f))
+    if algo = "A":
+        f = f_int if len(contents) > 2 else None
+        print_output(heuristic(s,g,f,a_star=True))
 
-
+if __name__ == "__main__":
+    main()
