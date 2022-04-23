@@ -120,6 +120,7 @@ def get_path(node):
 def generate_return_val(expanded):
     final_expanded = [n.value for n in expanded]
     # [-1] bc we appended the goal node in the end
+    # and then use it to trace back
     path = get_path(expanded[-1])
     return path, final_expanded
 
@@ -251,14 +252,14 @@ def heuristic_based(s, g, f=None, a_star=False):
     return generate_return_val(expanded)
 
 def print_output(path, expanded):
-    for n in range(len(path)):
-        print(path[n], end="")
-        if n != len(path)-1:
+    for i in range(len(path)):
+        print(path[i], end="")
+        if i != len(path)-1:
             print(",", end="")
     print("")
-    for n in range(len(expanded)):
-        print(expanded[n], end="")
-        if n != len(expanded)-1:
+    for i in range(len(expanded)):
+        print(expanded[i], end="")
+        if i != len(expanded)-1:
             print(",", end="")
     print("")
 
@@ -269,6 +270,7 @@ def read_input():
         contents = f.readlines()
     s = Node(int(contents[0]))
     g = Node(int(contents[1])) 
+    # Prase forbidden if file has a 3rd line
     if len(contents) > 2:
         forbidden_list_str = contents[2].split(",")
         f = [Node(int(dig)) for dig in forbidden_list_str]
