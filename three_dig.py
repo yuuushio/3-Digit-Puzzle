@@ -250,4 +250,17 @@ def heuristic_based(s, g, f=None, a_star=False):
     expanded.append(current)
     return generate_return_val(expanded)
 
-print(heuristic_based(Node(320), Node(110)))
+def print_output(path, expanded):
+    for n in range(len(path)):
+        print(path[n], end="")
+        if n != len(path)-1:
+            print(",", end="")
+    print("")
+    for n in range(len(expanded)):
+        print(expanded[n], end="")
+        if n != len(expanded)-1:
+            print(",", end="")
+    print("")
+
+
+
