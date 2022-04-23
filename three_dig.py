@@ -262,7 +262,7 @@ def print_output(path, expanded):
             print(",", end="")
     print("")
 
-def main():
+def read_input():
     algo = sys.argv[1]
     file_name = sys.argv[2]
     with open(file_name, 'r') as f:
@@ -271,25 +271,26 @@ def main():
     g = Node(int(contents[1])) 
     if len(contents) > 2:
         forbidden_list_str = contents[2].split(",")
-        f_int = [Node(int(dig)) for dig in forbidden_list_str]
+        f = [Node(int(dig)) for dig in forbidden_list_str]
+    else:
+        f = None
+    return algo, s, g, f
+
+def main():
+    algo, s, g, f = read_input()
     if algo == "B":
-        f = f_int if len(contents) > 2 else None
         p, e = bfs_dfs(s,g,f)
         print_output(p,e)
     if algo == "D":
-        f = f_int if len(contents) > 2 else None
         p, e = bfs_dfs(s,g,f,bfs=False)
         print_output(p, e)
     if algo == "I":
-        f = f_int if len(contents) > 2 else None
         p, e = ids(s,g,f)
         print_output(p, e)
     if algo == "G":
-        f = f_int if len(contents) > 2 else None
         p, e = heuristic(s,g,f)
         print_output(p, e)
     if algo == "A":
-        f = f_int if len(contents) > 2 else None
         p, e = heuristic(s,g,f,a_star=True)
         print_output(p, e)
 
