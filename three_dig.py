@@ -278,16 +278,20 @@ def main():
         print_output(p,e)
     if algo == "D":
         f = f_int if len(contents) > 2 else None
-        print_output(bfs_dfs(s,g,f,bfs=False))
+        p, e = bfs_dfs(s,g,f,bfs=False)
+        print_output(p, e)
     if algo == "I":
         f = f_int if len(contents) > 2 else None
-        print_output(ids(s,g,f))
+        p, e = ids(s,g,f)
+        print_output(p, e)
     if algo == "G":
         f = f_int if len(contents) > 2 else None
-        print_output(heuristic(s,g,f))
+        p, e = heuristic(s,g,f)
+        print_output(p, e)
     if algo == "A":
         f = f_int if len(contents) > 2 else None
-        print_output(heuristic(s,g,f,a_star=True))
+        p, e = heuristic(s,g,f,a_star=True)
+        print_output(p, e)
 
 if __name__ == "__main__":
     main()
