@@ -44,27 +44,27 @@ def test_bfs_expanded():
 def test_dfs_expanded():
     start = t.Node(320)
     goal = t.Node(110)
-    path, expanded = t.bfs_dfs(start, goal)
+    path, expanded = t.bfs_dfs(start, goal,bfs=False)
     expected = [320,220,210,110]
     assert expanded == expected
     
 def test_ids_expanded():
     start = t.Node(320)
     goal = t.Node(110)
-    path, expanded = t.bfs_dfs(start, goal)
+    path, expanded = t.ids(start, goal)
     expected = [320,320,220,420,310,330,321,320,220,210,230,221,420,410,430,421,310,210,410,311,330,230,430,331,321,221,421,311,331,320,220,210,110]
     assert expanded == expected
     
 def test_greedy_expanded():
     start = t.Node(320)
     goal = t.Node(110)
-    path, expanded = t.bfs_dfs(start, goal)
+    path, expanded = t.heuristic_based(start, goal)
     expected = [320,310,210,211,111,110]
     assert expanded == expected
     
 def test_a_star():
     start = t.Node(320)
     goal = t.Node(110)
-    path, expanded = t.bfs_dfs(start, goal)
+    path, expanded = t.heuristic_based(start, goal, a_star=True)
     expected = [320,310,210,220,210,110]
     assert expanded == expected

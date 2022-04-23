@@ -161,29 +161,34 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
 # Return: [] -> expanded nodes, true if goal found, else false
 def ids_helper(s, g, f, d, expanded):
     visited_nodes = []
+    visited_nodes_values = []
     fringe = []
     current = s
     visited_nodes.append(current)
-    children_generated = []
 
     while current.value != g.value and len(expanded) <= 1000:
         expanded.append(current)
         # Dont generate children of depth greater than current d
-        if current.depth < d and current not in children_generated:
+        if current.depth < d: 
             fringe = gen_children(current, f) + fringe
-            children_generated.append(current)
+        #print([a.value for a in fringe])
         # To avoid popping from empty fringe list
         if len(fringe) == 0:
             return expanded, False
         else:
             # Keep popping till you find an un-visited noed
             tmp = fringe.pop(0)
-            while tmp in visited_nodes and len(fringe) != 0:
-                tmp = fringe.pop(0)
+            while tmp.value in visited_nodes_values and len(fringe) != 0:
+                ind = visited_nodes_values[tmp.value]
+                if tmp.children == visited_nodes[ind].children:
+                    tmp = fringe.pop(0)
+                else:
+                    break
                 if len(fringe) == 0:
                     return expanded, False
 
             visited_nodes.append(tmp)
+            visited_nodes.append(tmp.value)
             if tmp is not None:
                 current = tmp
     if len(expanded) == 1000: return expanded, False
@@ -290,10 +295,10 @@ def main():
         p, e = ids(s,g,f)
         print_output(p, e)
     if algo == "G":
-        p, e = heuristic(s,g,f)
+        p, e = heuristic_based(s,g,f)
         print_output(p, e)
     if algo == "A":
-        p, e = heuristic(s,g,f,a_star=True)
+        p, e = heuristic_based(s,g,f,a_star=True)
         print_output(p, e)
 
 if __name__ == "__main__":
