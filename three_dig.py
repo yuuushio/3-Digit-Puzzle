@@ -11,10 +11,6 @@ class Node:
             self.depth = 0
         else:
             self.depth = self.parent.depth + 1
-    # Custom equality check:
-    # - 2 nodes are same if they same 3 digits AND same child nodes
-    def __eq__(self, other):
-        return set(self.children) == set(other.children) and self.value == other.value
 
 def mh_heuristic(a, b):
     res = 0
