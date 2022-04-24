@@ -128,10 +128,12 @@ def generate_return_val(expanded):
 # difference is the way the children are added to the fringe.
 def bfs_dfs(start, goal, forbidden=None, bfs=True):
     visited_nodes = []
+    visited_nodes_values = []
     fringe = []
     expanded = []
     current = start
     visited_nodes.append(current)
+    visited_nodes_values.append(current.value)
 
     while current.value != goal.value and len(expanded) <= 1000:
         expanded.append(current) # then we generate its children bc expanded
@@ -141,15 +143,20 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
             # else must be dfs; children are added at the front
             fringe = gen_children(current, forbidden) + fringe
 
-        tmp = fringe.pop(0) # O(n)
+        if len(fringe) != 0:
+            tmp = fringe.pop(0) # O(n)
         # To avoid cycles, we implement our own __eq__ method for node equality check
-        while tmp in visited_nodes:
+        while tmp.value in visited_nodes_values and len(fringe) != 0:
+            ind = visited_nodes_values.index(tmp.value)
             # Keep discarding from fringe till u find a digit that
             # hasn't been visited
-            tmp = fringe.pop(0)
+            if tmp.children == visited_nodes[ind].children:
+                tmp = fringe.pop(0)
+            else: break
         # If we reach here means we found an unvisited node;
         # can mark it as visited for next iteration
         visited_nodes.append(tmp)
+        visited_nodes_values.append(tmp.value)
         current = tmp
 
     if len(expanded) == 1000: return "No solution found, limit reached."
@@ -165,6 +172,7 @@ def ids_helper(s, g, f, d, expanded):
     fringe = []
     current = s
     visited_nodes.append(current)
+    visited_nodes_values.append(current.value)
 
     while current.value != g.value and len(expanded) <= 1000:
         expanded.append(current)
@@ -179,7 +187,7 @@ def ids_helper(s, g, f, d, expanded):
             # Keep popping till you find an un-visited noed
             tmp = fringe.pop(0)
             while tmp.value in visited_nodes_values and len(fringe) != 0:
-                ind = visited_nodes_values[tmp.value]
+                ind = visited_nodes_values.index(tmp.value)
                 if tmp.children == visited_nodes[ind].children:
                     tmp = fringe.pop(0)
                 else:
@@ -230,10 +238,12 @@ def astar_cost_func(node, g):
 def heuristic_based(s, g, f=None, a_star=False):
     expanded = []
     visited = []
+    visited_values = []
     # Pq to get node with lowest cost function in lg(n) time
     fringe = PriorityQueue()
     current = s
     visited.append(current)
+    visited_values.append(current.value)
     i = 0 # To differentiate when nodes have same h
     while current.value != g.value and len(expanded) <= 1000:
         expanded.append(current)
@@ -245,10 +255,14 @@ def heuristic_based(s, g, f=None, a_star=False):
         # Get next node to expand from fringe
         if not fringe.empty() != 0:
             tmp = fringe.get()[2]
-        while tmp in visited and not fringe.empty() != 0:
-            # Keep popping from fringe till an un-visited node is found
-            tmp = fringe.get()[2]
+        while tmp.value in visited_values and not fringe.empty() != 0:
+            ind = visited_values.index(tmp.value)
+            if tmp.children == visited[ind].children:
+                # Keep popping from fringe till an un-visited node is found
+                tmp = fringe.get()[2]
+            else: break
         visited.append(tmp)
+        visited_values.append(tmp.value)
         current = tmp
 
     if len(expanded) == 1000: return "No solution found."
