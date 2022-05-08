@@ -2,7 +2,9 @@ import math
 import sys
 from queue import PriorityQueue
 
+
 class Node:
+
     def __init__(self, digit, parent=None):
         self.value = digit
         self.parent = parent
@@ -12,11 +14,13 @@ class Node:
         else:
             self.depth = self.parent.depth + 1
 
+
 def mh_heuristic(a, b):
     res = 0
-    for x,y in zip(str(a), str(b)):
-        res += math.fabs(int(x)-int(y))
+    for x, y in zip(str(a), str(b)):
+        res += math.fabs(int(x) - int(y))
     return res
+
 
 # Helper method used to subtract/add at char i
 def change_single_digit(node_value, i):
@@ -28,10 +32,11 @@ def change_single_digit(node_value, i):
         dig_subtract = ith_digit - 1
     return dig_subtract, dig_add
 
+
 # generates 0-2 children of the ith index/digit
 def gen_ith_children(node, i):
     dig_add, dig_sub = change_single_digit(node.value, i)
-    # error check 
+    # error check
     if dig_add is None and dig_sub is None:
         return []
     if dig_add is not None and dig_sub is not None:
@@ -44,10 +49,10 @@ def gen_ith_children(node, i):
         else:
             str_a = f"{str(node.value)[0]}{str(node.value)[1]}{str(dig_add)}"
             str_b = f"{str(node.value)[0]}{str(node.value)[1]}{str(dig_sub)}"
-        
+
         return [Node(int(str_a), parent=node), Node(int(str_b), parent=node)]
 
-    elif dig_add: 
+    elif dig_add:
         if i == 0:
             str_a = f"{str(dig_add)}{str(node.value)[1]}{str(node.value)[2]}"
         elif i == 1:
@@ -66,6 +71,7 @@ def gen_ith_children(node, i):
 
         return [Node(int(str_b), parent=node)]
 
+
 # Returns a new list that doesnt consist of forbidden nodes
 def renew_list(node_li, f):
     new_list = []
@@ -77,17 +83,20 @@ def renew_list(node_li, f):
     else:
         return node_li
 
+
 # Generates the nodes' children
 def node_children_list_helper(node, renewed_li):
     # Children added as raw values - easier for comparisons
-    for n in renewed_li: node.children.append(n.value)
+    for n in renewed_li:
+        node.children.append(n.value)
+
 
 def gen_children(node, forbidden):
     node_li = []
     if node.parent is None:
         # generate all children since no parent to depend on
         for i in range(0, 3):
-            node_li += gen_ith_children(node, i) 
+            node_li += gen_ith_children(node, i)
     else:
         diff = math.fabs(node.parent.value - node.value)
         if diff == 100:
@@ -97,10 +106,11 @@ def gen_children(node, forbidden):
         else:
             # assume 3rd digit was changed (good assumption if valid input)
             node_li = gen_ith_children(node, 0) + gen_ith_children(node, 1)
-    
+
     renewed_li = renew_list(node_li, forbidden)
     node_children_list_helper(node, renewed_li)
-    return renewed_li 
+    return renewed_li
+
 
 def get_path(node):
     n = node
@@ -110,7 +120,8 @@ def get_path(node):
         path.append(n.parent.value)
         # Trace back through the parents for path
         n = n.parent
-    return path[::-1] # Return the reverse of the list since we tracked back
+    return path[::-1]  # Return the reverse of the list since we tracked back
+
 
 # Generates the output path and expanded list
 def generate_return_val(expanded):
@@ -119,6 +130,7 @@ def generate_return_val(expanded):
     # and then use it to trace back
     path = get_path(expanded[-1])
     return path, final_expanded
+
 
 # Can implement bfs and dfs in the same method, since the only
 # difference is the way the children are added to the fringe.
@@ -132,7 +144,7 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
     visited_nodes_values.append(current.value)
 
     while current.value != goal.value and len(expanded) <= 1000:
-        expanded.append(current) # then we generate its children bc expanded
+        expanded.append(current)  # then we generate its children bc expanded
         if bfs:
             fringe += gen_children(current, forbidden)
         else:
@@ -140,7 +152,7 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
             fringe = gen_children(current, forbidden) + fringe
 
         if len(fringe) != 0:
-            tmp = fringe.pop(0) # O(n)
+            tmp = fringe.pop(0)  # O(n)
         # To avoid cycles, we implement our own __eq__ method for node equality check
         while tmp.value in visited_nodes_values and len(fringe) != 0:
             ind = visited_nodes_values.index(tmp.value)
@@ -148,7 +160,8 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
             # hasn't been visited
             if tmp.children == visited_nodes[ind].children:
                 tmp = fringe.pop(0)
-            else: break
+            else:
+                break
         # If we reach here means we found an unvisited node;
         # can mark it as visited for next iteration
         visited_nodes.append(tmp)
@@ -159,6 +172,7 @@ def bfs_dfs(start, goal, forbidden=None, bfs=True):
     # If we're here, means goal has been found
     expanded.append(current)
     return generate_return_val(expanded)
+
 
 # DFS that only gets expanded up to a certain depth
 # Return: [] -> expanded nodes, true if goal found, else false
@@ -173,7 +187,7 @@ def ids_helper(s, g, f, d, expanded):
     while current.value != g.value and len(expanded) <= 1000:
         expanded.append(current)
         # Dont generate children of depth greater than current d
-        if current.depth < d: 
+        if current.depth < d:
             fringe = gen_children(current, f) + fringe
         #print([a.value for a in fringe])
         # To avoid popping from empty fringe list
@@ -199,13 +213,14 @@ def ids_helper(s, g, f, d, expanded):
     expanded.append(current)
     return expanded, True
 
+
 def ids(start, goal, forbidden=None):
     expanded = []
     depth = 0
     dls = ids_helper(start, goal, forbidden, depth, expanded)
     goal_found = False
     if dls[1]:
-        # if goal is found at depth 0 
+        # if goal is found at depth 0
         return [dls[0].value]
     else:
         # Iteratively call dfs till goal found/limit reached
@@ -220,6 +235,7 @@ def ids(start, goal, forbidden=None):
 
         return generate_return_val(expanded)
 
+
 # Returns f; f = g + h
 # where g = cost so far to reach node
 # h = heuristic of the node
@@ -227,6 +243,7 @@ def astar_cost_func(node, g):
     # Since the edge weights are virtually 1,
     # we can use the node's depth as cost to get to that node
     return node.depth + mh_heuristic(node.value, g.value)
+
 
 # Greedy & a_star combined into 1 since the only difference in this case
 # is the heuristic/f(n) calculation:
@@ -240,12 +257,13 @@ def heuristic_based(s, g, f=None, a_star=False):
     current = s
     visited.append(current)
     visited_values.append(current.value)
-    i = 0 # To differentiate when nodes have same h
+    i = 0  # To differentiate when nodes have same h
     while current.value != g.value and len(expanded) <= 1000:
         expanded.append(current)
         # Expand node and add its children to fringe
         for c in gen_children(current, f):
-            h = astar_cost_func(c, g) if a_star else mh_heuristic(c.value, g.value)
+            h = astar_cost_func(c, g) if a_star else mh_heuristic(
+                c.value, g.value)
             fringe.put((h, i, c))
             i -= 1
         # Get next node to expand from fringe
@@ -256,7 +274,8 @@ def heuristic_based(s, g, f=None, a_star=False):
             if tmp.children == visited[ind].children:
                 # Keep popping from fringe till an un-visited node is found
                 tmp = fringe.get()[2]
-            else: break
+            else:
+                break
         visited.append(tmp)
         visited_values.append(tmp.value)
         current = tmp
@@ -266,17 +285,19 @@ def heuristic_based(s, g, f=None, a_star=False):
     expanded.append(current)
     return generate_return_val(expanded)
 
+
 def print_output(path, expanded):
     for i in range(len(path)):
         print(path[i], end="")
-        if i != len(path)-1:
+        if i != len(path) - 1:
             print(",", end="")
     print("")
     for i in range(len(expanded)):
         print(expanded[i], end="")
-        if i != len(expanded)-1:
+        if i != len(expanded) - 1:
             print(",", end="")
     print("")
+
 
 def read_input():
     algo = sys.argv[1]
@@ -284,7 +305,7 @@ def read_input():
     with open(file_name, 'r') as f:
         contents = f.readlines()
     s = Node(int(contents[0]))
-    g = Node(int(contents[1])) 
+    g = Node(int(contents[1]))
     # Prase forbidden if file has a 3rd line
     if len(contents) > 2:
         forbidden_list_str = contents[2].split(",")
@@ -293,23 +314,25 @@ def read_input():
         f = None
     return algo, s, g, f
 
+
 def main():
     algo, s, g, f = read_input()
     if algo == "B":
-        p, e = bfs_dfs(s,g,f)
-        print_output(p,e)
+        p, e = bfs_dfs(s, g, f)
+        print_output(p, e)
     if algo == "D":
-        p, e = bfs_dfs(s,g,f,bfs=False)
+        p, e = bfs_dfs(s, g, f, bfs=False)
         print_output(p, e)
     if algo == "I":
-        p, e = ids(s,g,f)
+        p, e = ids(s, g, f)
         print_output(p, e)
     if algo == "G":
-        p, e = heuristic_based(s,g,f)
+        p, e = heuristic_based(s, g, f)
         print_output(p, e)
     if algo == "A":
-        p, e = heuristic_based(s,g,f,a_star=True)
+        p, e = heuristic_based(s, g, f, a_star=True)
         print_output(p, e)
+
 
 if __name__ == "__main__":
     main()
